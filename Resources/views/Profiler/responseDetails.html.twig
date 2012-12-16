@@ -1,0 +1,30 @@
+<div id="response_{{ index }}" class="tab-pane">
+    <h5>Informations</h5>
+    <table>
+        <tbody>
+            <tr>
+                <th>Code</th>
+                <td>{{ request.response.statusCode }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ request.response.reasonPhrase }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h5>Headers</h5>
+    <table>
+        <tbody>
+        {% for header,value in request.response.headers %}
+            <tr>
+                <th>{{ header }}</th>
+                <td>{{ value|join('<strong>, </strong>') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h5>Content</h5>
+    <pre class="prettyprint linenums"><code class="language-javascript  ">{{ request.response.rawBody|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
+</div>
