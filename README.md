@@ -51,11 +51,8 @@ It will display a new section in the Symfony2 toolbar and a new panel in the Web
 
 * this profiler will only work with concrete guzzle client, see official [documentation]:(http://guzzlephp.org/tour/building_services.html#create-a-client)
 
-* The bundle requires jquery to be defined at `%you_project%/web/js/lib/jquery/jquery.min.js`
-
 ## TODO
 
-* Remove the strict jquery requirements
 * Try to enabled the profiler for all guzzle client (configuration-based client)
 * Add extra information about the client configuration itself (thanks to the guzzle service builder)
 * Add clients|host|endpoint|time filters for http requests

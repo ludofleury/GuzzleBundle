@@ -42,23 +42,11 @@
 
 {% block head %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/playbloomguzzle/css/profiler_guzzle.css') }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/playbloomguzzle/vendor/google-code-prettify/prettify.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/playbloomguzzle/css/profiler_guzzle.min.css') }}" />
 {% endblock %}
 
 {% block panel %}
     <h2>Guzzle</h2>
 
     {% include 'PlaybloomGuzzleBundle:Profiler:requests.html.twig' with {'requests': collector.requests } %}
-
-    <script src="{{ asset('js/lib/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('bundles/playbloomguzzle/vendor/bootstrap/js/bootstrap-tab.min.js') }}"></script>
-    <script src="{{ asset('bundles/playbloomguzzle/vendor/google-code-prettify/prettify.js') }}"></script>
-    <script>
-    !function() {
-        $('div.summary').click(function() {
-          $(this).next('div.details').slideToggle(100);
-        });
-        window.prettyPrint && prettyPrint()
-    }()</script>
 {% endblock %}
