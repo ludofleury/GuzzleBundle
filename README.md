@@ -7,7 +7,7 @@ Provide a basic logger and an advanced profiler for Guzzle
 
 ## Installation
 
-Add the composer requirements
+Add the composer requirements (will be soon on packagist)
 ```javascript
 {
     "require-dev": {
@@ -32,16 +32,17 @@ Add the bundle to your Symfony app kernel
 ```
 
 To enable the advanced profiler & the toolbar/web profiler panel, add this line to your `app/config/config_dev.yml`
-```yaml
+```yml
 playbloom_guzzle:
     web_profiler: true
 ```
 
 ### Guzzle client as a Symfony service
 
-Concrete [Guzzle client creation]:(http://guzzlephp.org/tour/building_services.html#create-a-client) can be easily managed by the Symfony service container thanks to a [simple factory configuration]:(http://symfony.com/doc/current/components/dependency_injection/factories.html), in this case, you just need to tag your guzzle service(s) with `playbloom_guzzle.client`.
+Concrete [Guzzle client creation](http://guzzlephp.org/tour/building_services.html#create-a-client) can be easily managed by the Symfony service container thanks to a [simple factory configuration](http://symfony.com/doc/current/components/dependency_injection/factories.html), in this case, you just need to tag your guzzle service(s) with `playbloom_guzzle.client`.
 
 It will add the basic logger to your client(s). If the web_profiler is enabled in the current environement, it will also add the advanced profiler and display report on the Symfony toolbar/web profiler.
+
 ```xml
 <service id="acme.client"
     class="%acme.client.class%"
@@ -55,7 +56,9 @@ It will add the basic logger to your client(s). If the web_profiler is enabled i
 ### Add the logger/profiler manually to a Guzzle client
 
 If you need to handle the registration of the logger or profiler plugin manually, you can retrieve theses services from the Symfony container.
-```<?php
+
+```php
+<?php
 
 $client = new \Guzzle\Http\Client('https://my.api.com');
 
@@ -72,7 +75,7 @@ $client->addSubscriber($profilerPlugin);
 
 ## Customize your own profiler panel
 
-If you need a [custom profiler panel]:(http://symfony.com/doc/master/cookbook/profiler/data_collector.html) you can extend/reuse easily the data collector and profiler template from this bundle.
+If you need a [custom profiler panel](http://symfony.com/doc/master/cookbook/profiler/data_collector.html) you can extend/reuse easily the data collector and profiler template from this bundle.
 
 For example, you have a GithubBundle which interact with the Github API. You also have a Github profiler panel to debug your developement and you want to have the API requests profiled in this panel.
 
@@ -107,7 +110,7 @@ And finally declare your data collector
 </service>
 ```
 
-That's it, now your panel display your custom informations and the Guzzle API requests.
+That's it, now your profiler panel display your custom informations and the Guzzle API requests.
 
 ## TODO
 
