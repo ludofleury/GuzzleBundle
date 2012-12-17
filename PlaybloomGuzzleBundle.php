@@ -15,6 +15,6 @@ class PlaybloomGuzzleBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new ClientPluginPass());
-        $container->addCompilerPass(new DataCollectorPass());
+        // $container->addCompilerPass(new DataCollectorPass());
     }
 }

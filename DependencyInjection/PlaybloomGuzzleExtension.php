@@ -19,15 +19,14 @@ class PlaybloomGuzzleExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        if ($container->getParameter('kernel.debug')) {
-            $loader->load('profiler.xml');
-
-            if (!isset($configs['webprofiler']) || $configs['webprofiler']) {
-                $loader->load('datacollector.xml');
-            }
+        if (!isset($config['web_profiler']) || $config['web_profiler']) {
+            $loader->load('datacollector.xml');
         }
     }
 }

@@ -22,8 +22,8 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('webprofiler')
-                    ->defaultTrue()
+                ->booleanNode('web_profiler')
+                    ->defaultFalse()
                 ->end()
             ->end();
 

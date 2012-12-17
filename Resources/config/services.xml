@@ -15,6 +15,12 @@
             <tag name="monolog.logger" channel="guzzle" />
             <argument type="service" id="logger"/>
         </service>
+
+        <service id="playbloom_guzzle.client.plugin.profiler" class="Guzzle\Plugin\History\HistoryPlugin" public="false">
+            <call method="setLimit">
+                <argument>100</argument>
+            </call>
+        </service>
     </services>
 
 </container>
