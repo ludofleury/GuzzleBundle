@@ -5,6 +5,10 @@ Provide a basic logger and an advanced profiler for Guzzle
 * The basic logger use the default Symfony app logger, it's safe to use in your production environement.
 * The advanced profiler is for debug purposes and will display a dedicated report available in the toolbar and Symfony Web Profiler
 
+<img src="https://www.evernote.com/shard/s282/sh/0d175de7-29b6-4bd6-b0b0-4d14f7447489/ca61946cc7a5eeeb07bfe820c9037019/res/170ac2f9-0dcb-4d39-b73d-7fc6a6ce2cfa/skitch.png" witdh="280" height="175" alt="Guzzle Symfony web profiler panel">
+<img src="https://www.evernote.com/shard/s282/sh/5f8d3d3b-8f8f-411b-b41e-4ed399dce6e9/796213f2dfc5d3b489f95a9c5646103f/res/d55806d9-8055-40b2-8fd7-d1e1bf1b456d/skitch.png" witdh="280" height="175" alt="Guzzle Symfony web profiler panel - request details">
+<img src="https://www.evernote.com/shard/s282/sh/a5f1dc50-e4f7-4048-a84e-97f9c2190f30/1327fee5e07958e14d412351cc4917ae/res/99d80459-6a41-4faf-a7af-72710eab0e36/skitch.png" witdh="280" height="175" alt="Guzzle Symfony web profiler panel - response details">
+
 ## Installation
 
 Add the composer requirements (will be soon on packagist)
