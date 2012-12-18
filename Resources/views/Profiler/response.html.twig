@@ -4,11 +4,11 @@
         <tbody>
             <tr>
                 <th>Code</th>
-                <td>{{ request.response.statusCode }}</td>
+                <td>{{ response.statusCode }}</td>
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ request.response.reasonPhrase }}</td>
+                <td>{{ response.reasonPhrase }}</td>
             </tr>
         </tbody>
     </table>
@@ -16,7 +16,7 @@
     <h5>Headers</h5>
     <table>
         <tbody>
-        {% for header,value in request.response.headers %}
+        {% for header,value in response.headers %}
             <tr>
                 <th>{{ header }}</th>
                 <td>{{ value|join('<strong>, </strong>') }}</td>
@@ -26,5 +26,5 @@
     </table>
 
     <h5>Content</h5>
-    <pre class="prettyprint linenums"><code class="language-javascript  ">{{ request.response.rawBody|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
+    <pre class="prettyprint linenums"><code class="language-javascript  ">{{ responseContent|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
 </div>

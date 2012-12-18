@@ -25,7 +25,7 @@ class PlaybloomGuzzleExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        if (!isset($config['web_profiler']) || $config['web_profiler']) {
+        if ($config['web_profiler']) {
             $loader->load('datacollector.xml');
         }
     }

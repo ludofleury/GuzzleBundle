@@ -7,7 +7,7 @@
     <services>
         <service id="playbloom_guzzle.client.plugin.logger" class="Guzzle\Plugin\Log\LogPlugin" public="false">
             <argument type="service" id="playbloom_guzzle.client.plugin.logger_adapter"/>
-            <argument>Requested HTTP "{method} {resource}"</argument>
+            <argument>Requested "{host}" {method} "{resource}"</argument>
             <tag name="playbloom_guzzle.client.plugin" />
         </service>
 

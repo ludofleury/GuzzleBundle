@@ -7,9 +7,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * ClientPLlugin pass
+ * Client plugin pass
  *
- * Pass responsible to add Plugin to every tagged guzzle client
+ * Pass responsible to add plugin to every tagged guzzle client
  *
  * @author Ludovic Fleury <ludo.fleury@gmail.com>
  */

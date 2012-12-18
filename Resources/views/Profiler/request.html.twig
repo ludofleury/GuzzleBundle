@@ -1,21 +1,21 @@
 <div id="request_{{ index }}" class="tab-pane active">
-    {% set connection_percent = (100 * request.response.getInfo('connect_time')) / request.response.getInfo('total_time') %}
-    {% set process_percent = (100 * (request.response.getInfo('total_time') - request.response.getInfo('connect_time'))) / request.response.getInfo('total_time') %}
+    {% set connection_percent = (100 * time.connection) / time.total %}
+    {% set process_percent = (100 * (time.total - time.connection)) / time.total %}
 
     <h5>Time</h5>
     <table>
         <tbody>
             <tr>
                 <th>Duration total</th>
-                <td>{{ (request.response.getInfo('total_time') * 1000)|number_format(0, '', '') }} <small>ms</small></td>
+                <td>{{ (time.total * 1000)|number_format(0, '', '') }} <small>ms</small></td>
             </tr>
             <tr>
                 <th>Duration connection</th>
-                <td>{{ (request.response.getInfo('connect_time') * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ connection_percent|number_format(0, '', '') }}%</td>
+                <td>{{ (time.connection * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ connection_percent|number_format(0, '', '') }}%</td>
             </tr>
             <tr>
                 <th>Duration process</th>
-                <td>{{ ((request.response.getInfo('total_time') - request.response.getInfo('connect_time')) * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ process_percent|number_format(0, '', '') }}%</td>
+                <td>{{ ((time.total - time.connection) * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ process_percent|number_format(0, '', '') }}%</td>
             </tr>
             <tr>
                 <td colspan="2">
