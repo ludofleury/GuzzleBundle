@@ -4,6 +4,7 @@ namespace Playbloom\Bundle\GuzzleBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -15,6 +16,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ClientPluginPass implements CompilerPassInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
         $clients = $container->findTaggedServiceIds('playbloom_guzzle.client');
@@ -39,7 +43,13 @@ class ClientPluginPass implements CompilerPassInterface
         }
     }
 
-    private function registerGuzzlePlugin($clientDefinition, array $plugins)
+    /**
+     * Register plugin for a client
+     *
+     * @param  Definition $clientDefinition
+     * @param  array      $plugins
+     */
+    private function registerGuzzlePlugin(Definition $clientDefinition, array $plugins)
     {
         foreach ($plugins as $pluginId => $attributes) {
             $clientDefinition->addMethodCall(

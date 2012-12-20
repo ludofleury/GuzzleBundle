@@ -7,6 +7,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use Playbloom\Bundle\GuzzleBundle\DependencyInjection\Compiler\ClientPluginPass;
 
+/**
+ * Playbloom Guzzle Bundle
+ *
+ * @author Ludovic Fleury <ludo.fleury@gmail.com>
+ */
 class PlaybloomGuzzleBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
