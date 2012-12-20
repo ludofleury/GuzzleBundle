@@ -121,6 +121,12 @@ That's it, now your profiler panel display your custom informations and the Guzz
 * Add extra information about the client configuration itself (thanks to the guzzle service builder?)
 * Add clients|host|endpoint|time filters for http requests
 
+## Licence
+
+This bundle is under the MIT license. See the complete license in the bundle:
+
+    Resources/meta/LICENSE
+
 ## Credits
 
 * Swagger for the UI
