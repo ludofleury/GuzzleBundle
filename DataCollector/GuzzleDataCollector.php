@@ -18,13 +18,6 @@ class GuzzleDataCollector extends DataCollector
 
     public function __construct(HistoryPlugin $profiler)
     {
-        $this->data = array(
-            'calls'    => array(),
-            'error_count' => 0,
-            'methods'     => array(),
-            'total_time'  => 0,
-        );
-
         $this->profiler = $profiler;
     }
 
@@ -33,7 +26,14 @@ class GuzzleDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        foreach($this->profiler as $call) {
+        $this->data = array(
+            'calls'       => array(),
+            'error_count' => 0,
+            'methods'     => array(),
+            'total_time'  => 0,
+        );
+
+        foreach ($this->profiler as $call) {
             $error = false;
             $request = $call;
             $response = $request->getResponse();
@@ -70,24 +70,36 @@ class GuzzleDataCollector extends DataCollector
         }
     }
 
+    /**
+     * @return array
+     */
     public function getCalls()
     {
-        return $this->data['calls'];
+        return isset($this->data['calls']) ? $this->data['calls'] : array();
     }
 
+    /**
+     * @return int
+     */
     public function countErrors()
     {
-        return $this->data['error_count'];
+        return isset($this->data['error_count']) ? $this->data['error_count'] : 0;
     }
 
+    /**
+     * @return array
+     */
     public function getMethods()
     {
-        return $this->data['methods'];
+        return isset($this->data['methods']) ? $this->data['methods'] : array();
     }
 
+    /**
+     * @return int
+     */
     public function getTotalTime()
     {
-        return $this->data['total_time'];
+        return isset($this->data['total_time']) ? $this->data['total_time'] : 0;
     }
 
     /**
