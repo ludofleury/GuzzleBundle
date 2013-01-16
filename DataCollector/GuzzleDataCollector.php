@@ -3,6 +3,8 @@
 namespace Playbloom\Bundle\GuzzleBundle\DataCollector;
 
 use Guzzle\Plugin\History\HistoryPlugin;
+use Guzzle\Http\Message\RequestInterface;
+use Guzzle\Http\Message\Response as GuzzleResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -60,9 +62,9 @@ class GuzzleDataCollector extends DataCollector
             }
 
             $this->data['calls'][] = array(
-                'request' => $request,
+                'request' => $this->sanitizeRequest($request),
                 'requestContent' => $requestContent,
-                'response' => $response,
+                'response' => $this->sanitizeResponse($response),
                 'responseContent' => $responseContent,
                 'time' => $time,
                 'error' => $error
@@ -108,5 +110,37 @@ class GuzzleDataCollector extends DataCollector
     public function getName()
     {
         return 'guzzle';
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @return array
+     */
+    private function sanitizeRequest(RequestInterface $request)
+    {
+        return array(
+            'method'           => $request->getMethod(),
+            'path'             => $request->getPath(),
+            'scheme'           => $request->getScheme(),
+            'host'             => $request->getHost(),
+            'query'            => $request->getQuery(),
+            'headers'          => $request->getHeaders(),
+            'query_parameters' => $request->getUrl(true)->getQuery(),
+        );
+    }
+
+    /**
+     * @param GuzzleResponse $response
+     *
+     * @return array
+     */
+    private function sanitizeResponse(GuzzleResponse $response)
+    {
+        return array(
+            'statusCode'   => $response->getStatusCode(),
+            'reasonPhrase' => $response->getReasonPhrase(),
+            'headers'      => $response->getHeaders(),
+        );
     }
 }
