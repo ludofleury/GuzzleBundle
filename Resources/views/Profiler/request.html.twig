@@ -69,7 +69,7 @@
     <h5>Query Parameters</h5>
     <table>
         <tbody>
-        {% for name,parameter in request.getUrl(true).query %}
+        {% for name,parameter in request.query_parameters %}
             <tr>
                 <th>{{ name }}</th>
                 <td>{{ parameter }}</td>
