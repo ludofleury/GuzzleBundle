@@ -8,6 +8,7 @@ use Guzzle\Http\Message\Response as GuzzleResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 
 /**
  * GuzzleDataCollector.
@@ -41,6 +42,9 @@ class GuzzleDataCollector extends DataCollector
             $response = $request->getResponse();
 
             $requestContent = null;
+            if ($request instanceof EntityEnclosingRequestInterface) {
+                $requestContent = $request->getBody();
+            }
             $responseContent = $response->getBody(true);
 
             $time = array(
@@ -135,7 +139,7 @@ class GuzzleDataCollector extends DataCollector
      *
      * @return array
      */
-    private function sanitizeResponse(GuzzleResponse $response)
+    private function sanitizeResponse($response)
     {
         return array(
             'statusCode'   => $response->getStatusCode(),

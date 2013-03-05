@@ -77,4 +77,9 @@
         {% endfor %}
         </tbody>
     </table>
+    
+    {% if requestContent is not empty %}
+        <h5>Content</h5>
+        <pre class="prettyprint linenums"><code class="language-javascript  ">{{ requestContent|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
+    {% endif %}
 </div>
