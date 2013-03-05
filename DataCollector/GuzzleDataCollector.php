@@ -43,7 +43,7 @@ class GuzzleDataCollector extends DataCollector
 
             $requestContent = null;
             if ($request instanceof EntityEnclosingRequestInterface) {
-                $requestContent = $request->getBody();
+                $requestContent = (string) $request->getBody();
             }
             $responseContent = $response->getBody(true);
 
