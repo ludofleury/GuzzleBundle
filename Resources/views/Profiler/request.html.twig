@@ -1,3 +1,16 @@
+{% macro display_array_recursive(array, separator = ', ', opening_char = '[', closing_char = ']') -%}
+{{ opening_char }}
+{%- for key, value in array -%}
+    {%- if value is iterable -%}
+        {{ key }} => {{ _self.display_array_recursive(value, separator, opening_char, closing_char) }}
+    {%- else -%}
+        {{ key }} => {{ value }}
+        {%- if not loop.last %}{{ separator }}{% endif -%}
+    {%- endif -%}
+{%- endfor -%}
+{{ closing_char }}
+{%- endmacro %}
+
 <div id="request_{{ index }}" class="tab-pane active">
     {% set connection_percent = (100 * time.connection) / time.total %}
     {% set process_percent = (100 * (time.total - time.connection)) / time.total %}
@@ -72,12 +85,18 @@
         {% for name,parameter in request.query_parameters %}
             <tr>
                 <th>{{ name }}</th>
-                <td>{{ parameter }}</td>
+                <td>
+                    {% if parameter is iterable %}
+                        {{ _self.display_array_recursive(parameter) }}
+                    {% else %}
+                        {{ parameter }}
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    
+
     {% if requestContent is not empty %}
         <h5>Content</h5>
         <pre class="prettyprint linenums"><code class="language-javascript  ">{{ requestContent|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
