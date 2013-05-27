@@ -38,6 +38,11 @@
         <span class="count">
             {% if collector.calls is not empty %}
                 <span>{{ collector.calls|length }}</span>
+                {% if collector.totalTime > 1.0 %}
+                    <span>{{ '%0.2f'|format(collector.totalTime) }} s</span>
+                {% else %}
+                    <span>{{ '%0.0f'|format(collector.totalTime * 1000) }} ms</span>
+                {% endif %}
             {% endif %}
         </span>
     </span>
