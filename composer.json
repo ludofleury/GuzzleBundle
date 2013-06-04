@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/web-profiler-bundle": "2.*",
+        "symfony/web-profiler-bundle": "~2.1.0",
         "guzzle/guzzle": "3.*"
     },
     "autoload": {
