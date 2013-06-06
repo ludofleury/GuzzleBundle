@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Guzzlebundle : Debug your API Calls with a Symfony web profiler for guzzle" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Guzzlebundle</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ludofleury/GuzzleBundle">View on GitHub</a>
+
+          <h1 id="project_title">Guzzlebundle</h1>
+          <h2 id="project_tagline">Debug your API Calls with a Symfony web profiler for guzzle</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ludofleury/GuzzleBundle/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ludofleury/GuzzleBundle/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="playbloom-guzzle-bundle" class="anchor" href="#playbloom-guzzle-bundle"><span class="octicon octicon-link"></span></a>Playbloom Guzzle Bundle</h1>
+
+<p>Provide a basic logger and an advanced profiler for Guzzle</p>
+
+<ul>
+<li>The basic logger use the default Symfony app logger, it's safe to use in your production environement.</li>
+<li>The advanced profiler is for debug purposes and will display a dedicated report available in the toolbar and Symfony Web Profiler</li>
+</ul><p><img src="../images/guzzle-profiler-panel.png" height="175" alt="Guzzle Symfony web profiler panel"><img src="../images/guzzle-request-detail.png" height="175" alt="Guzzle Symfony web profiler panel - request details"><img src="../images/guzzle-response-detail.png" height="175" alt="Guzzle Symfony web profiler panel - response details"></p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add the composer requirements (will be soon on packagist)</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"require-dev"</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">"playbloom/guzzle-bundle"</span><span class="o">:</span> <span class="s2">"dev-master"</span>
+    <span class="p">},</span>
+
+    <span class="s2">"repositories"</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="o">:</span> <span class="s2">"git"</span><span class="p">,</span>
+            <span class="s2">"url"</span><span class="o">:</span> <span class="s2">"git://github.com/ludofleury/GuzzleBundle.git"</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Add the bundle to your Symfony app kernel</p>
+
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="c1">// in %your_project%/app/AppKernel.php</span>
+    <span class="nv">$bundles</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Playbloom\Bundle\GuzzleBundle\PlaybloomGuzzleBundle</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+
+<p>To enable the advanced profiler &amp; the toolbar/web profiler panel, add this line to your <code>app/config/config_dev.yml</code></p>
+
+<div class="highlight"><pre><span class="l-Scalar-Plain">playbloom_guzzle</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">web_profiler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</pre></div>
+
+<h3>
+<a name="guzzle-client-as-a-symfony-service" class="anchor" href="#guzzle-client-as-a-symfony-service"><span class="octicon octicon-link"></span></a>Guzzle client as a Symfony service</h3>
+
+<p>Concrete <a href="http://guzzlephp.org/tour/building_services.html#create-a-client">Guzzle client creation</a> can be easily managed by the Symfony service container thanks to a <a href="http://symfony.com/doc/current/components/dependency_injection/factories.html">simple factory configuration</a>, in this case, you just need to tag your guzzle service(s) with <code>playbloom_guzzle.client</code>.</p>
+
+<p>It will add the basic logger to your client(s). If the web_profiler is enabled in the current environement, it will also add the advanced profiler and display report on the Symfony toolbar/web profiler.</p>
+
+<div class="highlight"><pre><span class="nt">&lt;service</span> <span class="na">id=</span><span class="s">"acme.client"</span>
+    <span class="na">class=</span><span class="s">"%acme.client.class%"</span>
+    <span class="na">factory-class=</span><span class="s">"%acme.client.class%"</span>
+    <span class="na">factory-method=</span><span class="s">"factory"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- your arguments --&gt;</span>
+    <span class="nt">&lt;tag</span> <span class="na">name=</span><span class="s">"playbloom_guzzle.client"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/service&gt;</span>
+</pre></div>
+
+<h3>
+<a name="add-the-loggerprofiler-manually-to-a-guzzle-client" class="anchor" href="#add-the-loggerprofiler-manually-to-a-guzzle-client"><span class="octicon octicon-link"></span></a>Add the logger/profiler manually to a Guzzle client</h3>
+
+<p>If you need to handle the registration of the logger or profiler plugin manually, you can retrieve theses services from the Symfony container.</p>
+
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Guzzle\Http\Client</span><span class="p">(</span><span class="s1">'https://my.api.com'</span><span class="p">);</span>
+
+<span class="c1">// basic logger service plugged &amp; configured with the default Symfony app logger</span>
+<span class="nv">$loggerPlugin</span> <span class="o">=</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'playbloom_guzzle.client.plugin.logger'</span><span class="p">);</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">addSubscriber</span><span class="p">(</span><span class="nv">$loggerPlugin</span><span class="p">);</span>
+
+<span class="c1">// advanced profiler for developement and debug, requires web_profiler to be enabled</span>
+<span class="nv">$profilerPlugin</span> <span class="o">=</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'playbloom_guzzle.client.plugin.profiler'</span><span class="p">);</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">addSubscriber</span><span class="p">(</span><span class="nv">$profilerPlugin</span><span class="p">);</span>
+
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+
+<h2>
+<a name="customize-your-own-profiler-panel" class="anchor" href="#customize-your-own-profiler-panel"><span class="octicon octicon-link"></span></a>Customize your own profiler panel</h2>
+
+<p>If you need a <a href="http://symfony.com/doc/master/cookbook/profiler/data_collector.html">custom profiler panel</a> you can extend/reuse easily the data collector and profiler template from this bundle.</p>
+
+<p>For example, you have a GithubBundle which interact with the Github API. You also have a Github profiler panel to debug your developement and you want to have the API requests profiled in this panel.</p>
+
+<p>It's quite easy:
+First, define your own <code>GithubDataCollector</code> extending the <code>Playbloom\Bundle\GuzzleBundle\DataCollector\GuzzleDataCollector</code></p>
+
+<p>Then extends the guzzle web profiler template</p>
+
+<pre lang="twig"><code>{% extends 'PlaybloomGuzzleBundle:Collector:guzzle.html.twig' %}
+
+{% block panel %}
+    &lt;div class="github"&gt;
+        &lt;h2&gt;Github&lt;/h2&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;strong&gt;Github API key:&lt;/strong&gt; {{ collector.getApiKey }}&lt;/li&gt;
+            &lt;!-- Some custom information --&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+
+    {% include 'PlaybloomGuzzleBundle:Profiler:requests.html.twig' with {'requests': collector.requests } %}
+{% endblock %}
+</code></pre>
+
+<p>And finally declare your data collector</p>
+
+<div class="highlight"><pre><span class="nt">&lt;service</span> <span class="na">id=</span><span class="s">"data_collector.github"</span> <span class="na">class=</span><span class="s">"Acme\GithubBundle\DataCollector\GithubDataCollector"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;argument</span> <span class="na">type=</span><span class="s">"service"</span> <span class="na">id=</span><span class="s">"playbloom_guzzle.client.plugin.profiler"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tag</span> <span class="na">name=</span><span class="s">"data_collector"</span>
+        <span class="na">template=</span><span class="s">"AcmeGithubBundle:Collector:github"</span>
+        <span class="na">id=</span><span class="s">"github"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/service&gt;</span>
+</pre></div>
+
+<p>That's it, now your profiler panel display your custom informations and the Guzzle API requests.</p>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Add extra information about the client configuration itself (thanks to the guzzle service builder?)</li>
+<li>Add clients|host|endpoint|time filters for http requests</li>
+</ul><h2>
+<a name="licence" class="anchor" href="#licence"><span class="octicon octicon-link"></span></a>Licence</h2>
+
+<p>This bundle is under the MIT license. See the complete license in the bundle:</p>
+
+<pre><code>Resources/meta/LICENSE
+</code></pre>
+
+<h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<ul>
+<li>Swagger for the UI</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Guzzlebundle maintained by <a href="https://github.com/ludofleury">ludofleury</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
