@@ -6,9 +6,9 @@ Provide a basic logger and an advanced profiler for Guzzle
 * The advanced profiler is for debug purposes and will display a dedicated report available in the toolbar and Symfony Web Profiler
 
 
-<img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-profiler-panel.png" withd="280" height="175" alt="Guzzle Symfony web profiler panel"/>
-<img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-request-detail.png" withd="280" height="175" alt="Guzzle Symfony web profiler panel - request details"/>
-<img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-response-detail.png" withd="280" height="175" alt="Guzzle Symfony web profiler panel - response details"/>
+<img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-profiler-panel.png" width="280" height="175" alt="Guzzle Symfony web profiler panel"/>
+<img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-request-detail.png" width="280" height="175" alt="Guzzle Symfony web profiler panel - request details"/>
+<img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-response-detail.png" width="280" height="175" alt="Guzzle Symfony web profiler panel - response details"/>
 
 ## Installation
 
