@@ -13,7 +13,7 @@ use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 /**
  * GuzzleDataCollector.
  *
- * @author Ludovic Fleury <ludo.flery@gmail.com>
+ * @author Ludovic Fleury <ludo.fleury@gmail.com>
  */
 class GuzzleDataCollector extends DataCollector
 {
