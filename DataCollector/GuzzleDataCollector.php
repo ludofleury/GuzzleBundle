@@ -3,6 +3,7 @@
 namespace Playbloom\Bundle\GuzzleBundle\DataCollector;
 
 use Guzzle\Plugin\History\HistoryPlugin;
+
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response as GuzzleResponse;
 use Symfony\Component\HttpFoundation\Request;
