@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="Tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="PlaybloomGuzzleBundle Test Suite">
+            <directory>./Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./Tests</directory>
+                <directory>./Resources</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
