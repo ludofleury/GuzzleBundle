@@ -124,13 +124,12 @@ class GuzzleDataCollector extends DataCollector
     private function sanitizeRequest(RequestInterface $request)
     {
         return array(
+            'headers'          => $request->getHeaders(),
             'method'           => $request->getMethod(),
-            'path'             => $request->getPath(),
             'scheme'           => $request->getScheme(),
             'host'             => $request->getHost(),
+            'path'             => $request->getPath(),
             'query'            => $request->getQuery(),
-            'headers'          => $request->getHeaders(),
-            'query_parameters' => $request->getUrl(true)->getQuery(),
         );
     }
 
