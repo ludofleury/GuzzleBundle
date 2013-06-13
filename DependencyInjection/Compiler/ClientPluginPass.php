@@ -46,8 +46,8 @@ class ClientPluginPass implements CompilerPassInterface
     /**
      * Register plugin for a client
      *
-     * @param  Definition $clientDefinition
-     * @param  array      $plugins
+     * @param Definition $clientDefinition
+     * @param array      $plugins
      */
     private function registerGuzzlePlugin(Definition $clientDefinition, array $plugins)
     {

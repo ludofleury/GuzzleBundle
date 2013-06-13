@@ -124,9 +124,7 @@ That's it, now your profiler panel display your custom informations and the Guzz
 
 ## Licence
 
-This bundle is under the MIT license. See the complete license in the bundle:
-
-    Resources/meta/LICENSE
+This bundle is under the MIT license. See the complete license in the bundle
 
 ## Credits
 

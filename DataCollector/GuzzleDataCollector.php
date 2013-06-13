@@ -3,6 +3,7 @@
 namespace Playbloom\Bundle\GuzzleBundle\DataCollector;
 
 use Guzzle\Plugin\History\HistoryPlugin;
+
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response as GuzzleResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 /**
  * GuzzleDataCollector.
  *
- * @author Ludovic Fleury <ludo.flery@gmail.com>
+ * @author Ludovic Fleury <ludo.fleury@gmail.com>
  */
 class GuzzleDataCollector extends DataCollector
 {
@@ -124,13 +125,12 @@ class GuzzleDataCollector extends DataCollector
     private function sanitizeRequest(RequestInterface $request)
     {
         return array(
+            'headers'          => $request->getHeaders(),
             'method'           => $request->getMethod(),
-            'path'             => $request->getPath(),
             'scheme'           => $request->getScheme(),
             'host'             => $request->getHost(),
+            'path'             => $request->getPath(),
             'query'            => $request->getQuery(),
-            'headers'          => $request->getHeaders(),
-            'query_parameters' => $request->getUrl(true)->getQuery(),
         );
     }
 
