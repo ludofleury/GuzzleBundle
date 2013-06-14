@@ -67,21 +67,21 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
             array(
                 'request' => array(
                     'headers' => null,
-                    'method' => 'get',
-                    'scheme' => 'http',
-                    'host' => 'test.local',
-                    'path' => '/',
-                    'query' => $callUrlQuery
+                    'method'  => 'get',
+                    'scheme'  => 'http',
+                    'host'    => 'test.local',
+                    'path'    => '/',
+                    'query'   => $callUrlQuery,
+                    'body'    => null
                 ),
-                'requestContent' => null,
                 'response' => array(
-                    'statusCode' => 200,
+                    'statusCode'   => 200,
                     'reasonPhrase' => 'OK',
-                    'headers' => null
+                    'headers'      => null,
+                    'body'         => 'Hello world',
                 ),
-                'responseContent' => 'Hello world',
                 'time' => array(
-                    'total' => 150,
+                    'total'      => 150,
                     'connection' => 15
                 ),
                 'error' => false
@@ -119,21 +119,21 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
             array(
                 'request' => array(
                     'headers' => null,
-                    'method' => 'post',
-                    'scheme' => 'http',
-                    'host' => 'test.local',
-                    'path' => '/',
-                    'query' => $callUrlQuery
+                    'method'  => 'post',
+                    'scheme'  => 'http',
+                    'host'    => 'test.local',
+                    'path'    => '/',
+                    'query'   => $callUrlQuery,
+                    'body'    => null,
                 ),
-                'requestContent' => null,
                 'response' => array(
-                    'statusCode' => 404,
+                    'statusCode'   => 404,
                     'reasonPhrase' => 'Not found',
-                    'headers' => null
+                    'headers'      => null,
+                    'body'         => 'Oops',
                 ),
-                'responseContent' => 'Oops',
                 'time' => array(
-                    'total' => 150,
+                    'total'      => 150,
                     'connection' => 15
                 ),
                 'error' => true
@@ -178,21 +178,21 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
             array(
                 'request' => array(
                     'headers' => null,
-                    'method' => 'post',
-                    'scheme' => 'http',
-                    'host' => 'test.local',
-                    'path' => '/',
-                    'query' => $callUrlQuery
+                    'method'  => 'post',
+                    'scheme'  => 'http',
+                    'host'    => 'test.local',
+                    'path'    => '/',
+                    'query'   => $callUrlQuery,
+                    'body'    => 'Request body string',
                 ),
-                'requestContent' => 'Request body string',
                 'response' => array(
-                    'statusCode' => 201,
+                    'statusCode'   => 201,
                     'reasonPhrase' => 'Created',
-                    'headers' => null
+                    'headers'      => null,
+                    'body'         => '',
                 ),
-                'responseContent' => '',
                 'time' => array(
-                    'total' => 150,
+                    'total'      => 150,
                     'connection' => 15
                 ),
                 'error' => false
