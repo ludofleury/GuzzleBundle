@@ -4,8 +4,7 @@ namespace Playbloom\Bundle\GuzzleBundle\DataCollector;
 
 use Guzzle\Plugin\History\HistoryPlugin;
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response as GuzzleResponse;
+use Guzzle\Http\Message\RequestInterface as GuzzleRequestInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -30,51 +29,50 @@ class GuzzleDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $this->data = array(
+        $data = array(
             'calls'       => array(),
             'error_count' => 0,
             'methods'     => array(),
             'total_time'  => 0,
         );
 
+        /**
+         * Aggregates global metrics about Guzzle usage
+         *
+         * @param array $request
+         * @param array $response
+         * @param array $time
+         * @param bool  $error
+         */
+        $aggregate = function ($request, $response, $time, $error) use (&$data) {
+
+            $method = $request['method'];
+            if (!isset($data['methods'][$method])) {
+                $data['methods'][$method] = 0;
+            }
+
+            $data['methods'][$method]++;
+            $data['total_time'] += $time['total'];
+            $data['error_count'] += (int) $error;
+        };
+
         foreach ($this->profiler as $call) {
-            $error = false;
-            $request = $call;
-            $response = $request->getResponse();
+            $request = $this->collectRequest($call);
+            $response = $this->collectResponse($call);
+            $time = $this->collectTime($call);
+            $error = $call->getResponse()->isError();
 
-            $requestContent = null;
-            if ($request instanceof EntityEnclosingRequestInterface) {
-                $requestContent = (string) $request->getBody();
-            }
-            $responseContent = $response->getBody(true);
+            $aggregate($request, $response, $time, $error);
 
-            $time = array(
-                'total' => $response->getInfo('total_time'),
-                'connection' => $response->getInfo('connect_time')
-            );
-
-            $this->data['total_time'] += $response->getInfo('total_time');
-
-            if (!isset($this->data['methods'][$request->getMethod()])) {
-                $this->data['methods'][$request->getMethod()] = 0;
-            }
-
-            $this->data['methods'][$request->getMethod()]++;
-
-            if ($response->isError()) {
-                $this->data['error_count']++;
-                $error = true;
-            }
-
-            $this->data['calls'][] = array(
-                'request' => $this->sanitizeRequest($request),
-                'requestContent' => $requestContent,
-                'response' => $this->sanitizeResponse($response),
-                'responseContent' => $responseContent,
+            $data['calls'][] = array(
+                'request' => $request,
+                'response' => $response,
                 'time' => $time,
                 'error' => $error
             );
         }
+
+        $this->data = $data;
     }
 
     /**
@@ -118,33 +116,64 @@ class GuzzleDataCollector extends DataCollector
     }
 
     /**
-     * @param RequestInterface $request
+     * Collect & sanitize data about a Guzzle request
+     *
+     * @param Guzzle\Http\Message\RequestInterface $request
      *
      * @return array
      */
-    private function sanitizeRequest(RequestInterface $request)
+    private function collectRequest(GuzzleRequestInterface $request)
     {
+        $body = null;
+        if ($request instanceof EntityEnclosingRequestInterface) {
+            $body = (string) $request->getBody();
+        }
+
         return array(
-            'headers'          => $request->getHeaders(),
-            'method'           => $request->getMethod(),
-            'scheme'           => $request->getScheme(),
-            'host'             => $request->getHost(),
-            'path'             => $request->getPath(),
-            'query'            => $request->getQuery(),
+            'headers' => $request->getHeaders(),
+            'method'  => $request->getMethod(),
+            'scheme'  => $request->getScheme(),
+            'host'    => $request->getHost(),
+            'path'    => $request->getPath(),
+            'query'   => $request->getQuery(),
+            'body'    => $body
         );
     }
 
     /**
-     * @param GuzzleResponse $response
+     * Collect & sanitize data about a Guzzle response
+     *
+     * @param Guzzle\Http\Message\RequestInterface $request
      *
      * @return array
      */
-    private function sanitizeResponse($response)
+    private function collectResponse(GuzzleRequestInterface $request)
     {
+        $response = $request->getResponse();
+        $body = $response->getBody(true);
+
         return array(
             'statusCode'   => $response->getStatusCode(),
             'reasonPhrase' => $response->getReasonPhrase(),
             'headers'      => $response->getHeaders(),
+            'body'         => $body
+        );
+    }
+
+    /**
+     * Collect time for a Guzzle request
+     *
+     * @param Guzzle\Http\Message\RequestInterface $request
+     *
+     * @return array
+     */
+    private function collectTime(GuzzleRequestInterface $request)
+    {
+        $response = $request->getResponse();
+
+        return array(
+            'total'      => $response->getInfo('total_time'),
+            'connection' => $response->getInfo('connect_time')
         );
     }
 }

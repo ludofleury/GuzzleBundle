@@ -97,8 +97,8 @@
         </tbody>
     </table>
 
-    {% if requestContent is not empty %}
+    {% if request.body is not empty %}
         <h5>Content</h5>
-        <pre class="prettyprint linenums"><code class="language-javascript  ">{{ requestContent|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
+        <pre class="prettyprint linenums"><code class="language-javascript  ">{{ request.body|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
     {% endif %}
 </div>
