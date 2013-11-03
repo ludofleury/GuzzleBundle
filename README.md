@@ -1,4 +1,4 @@
-# Playbloom Guzzle Bundle [![Build Status](https://travis-ci.org/ludofleury/GuzzleBundle.png?branch=master)](https://travis-ci.org/ludofleury/GuzzleBundle)
+# Guzzle Bundle [![Build Status](https://travis-ci.org/ludofleury/GuzzleBundle.png?branch=master)](https://travis-ci.org/ludofleury/GuzzleBundle) [![Latest Stable Version](https://poser.pugx.org/playbloom/guzzle-bundle/v/stable.png)](https://packagist.org/packages/playbloom/guzzle-bundle) [![Total Downloads](https://poser.pugx.org/playbloom/guzzle-bundle/downloads.png)](https://packagist.org/packages/playbloom/guzzle-bundle)
 
 Provide a basic logger and an advanced profiler for Guzzle
 
