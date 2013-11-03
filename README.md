@@ -129,3 +129,7 @@ This bundle is under the MIT license. See the complete license in the bundle
 ## Credits
 
 * Swagger for the UI
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ludofleury/guzzlebundle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
