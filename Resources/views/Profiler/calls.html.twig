@@ -1,7 +1,7 @@
 <div class="guzzle">
     <h2>Requests</h2>
     {% for index,call in calls %}
-        {% include 'PlaybloomGuzzleBundle:Profiler:call.html.twig' with { 'call': call } %}
+        {% include '@PlaybloomGuzzle/Profiler/call.html.twig' with { 'call': call } %}
     {% endfor %}
 </div>
-{% include 'PlaybloomGuzzleBundle:Profiler:javascript.html.twig' %}
+{% include '@PlaybloomGuzzle/Profiler/javascript.html.twig' %}
