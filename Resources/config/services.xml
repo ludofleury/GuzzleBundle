@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="playbloom_guzzle.client.plugin.logger" class="Guzzle\Plugin\Log\LogPlugin" public="false">
+        <service id="playbloom_guzzle.client.plugin.logger" class="Guzzle\Plugin\Log\LogPlugin" public="true">
             <argument type="service" id="playbloom_guzzle.client.plugin.logger_adapter"/>
             <argument>Requested "{host}" {method} "{resource}"</argument>
             <tag name="playbloom_guzzle.client.plugin" />
@@ -16,7 +16,7 @@
             <argument type="service" id="logger"/>
         </service>
 
-        <service id="playbloom_guzzle.client.plugin.profiler" class="Guzzle\Plugin\History\HistoryPlugin" public="false">
+        <service id="playbloom_guzzle.client.plugin.profiler" class="Guzzle\Plugin\History\HistoryPlugin" public="true">
             <call method="setLimit">
                 <argument>100</argument>
             </call>
