@@ -19,7 +19,9 @@
         {% for header,value in response.headers %}
             <tr>
                 <th>{{ header }}</th>
-                <td>{{ value|join('<strong>, </strong>') }}</td>
+                <td>
+                    {{ value|join(', ') }}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
