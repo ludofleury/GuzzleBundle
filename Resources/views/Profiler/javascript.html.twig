@@ -1,4 +1,6 @@
-<script src="{{ asset('bundles/playbloomguzzle/vendor/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('bundles/playbloomguzzle/vendor/bootstrap/js/bootstrap-tab.min.js') }}"></script>
-<script src="{{ asset('bundles/playbloomguzzle/vendor/google-code-prettify/prettify.js') }}"></script>
+<script>
+    {% include "@PlaybloomGuzzle/public/vendor/jquery/jquery.min.js" %}
+    {% include "@PlaybloomGuzzle/public/vendor/bootstrap/js/bootstrap-tab.min.js" %}
+    {% include "@PlaybloomGuzzle/public/vendor/google-code-prettify/prettify.js" %}
+</script>
 <script>!function() { $('div.summary').click(function() { $(this).next('div.details').slideToggle(100);});window.prettyPrint && prettyPrint()}()</script>
