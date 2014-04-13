@@ -218,11 +218,11 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
      *
      * @param Guzzle\Http\Message\RequestInterface $request
      * @param Guzzle\Http\Message\Response         $response
-     * @param array                                $infos    call informations
+     * @param array                                $info    call information
      *
      * @return Guzzle\Http\Message\RequestInterface
      */
-    protected function stubCall($request, $response, array $infos)
+    protected function stubCall($request, $response, array $info)
     {
         $request
             ->expects($this->any())
@@ -241,12 +241,12 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
             )
             ->will(
                 $this->returnCallback(
-                    function ($arg) use ($infos) {
-                        if (!isset($infos[$arg])) {
+                    function ($arg) use ($info) {
+                        if (!isset($info[$arg])) {
                             throw new Exception(sprintf('%s is not a mocked information', $arg));
                         }
 
-                        return $infos[$arg];
+                        return $info[$arg];
                     }
                 )
             )
