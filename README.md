@@ -115,7 +115,7 @@ And finally declare your data collector
 </service>
 ```
 
-That's it, now your profiler panel display your custom informations and the Guzzle API requests.
+That's it, now your profiler panel displays your custom information and the Guzzle API requests.
 
 ## TODO
 
