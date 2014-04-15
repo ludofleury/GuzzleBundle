@@ -12,19 +12,12 @@ Provide a basic logger and an advanced profiler for Guzzle
 
 ## Installation
 
-Add the composer requirements (will be soon on packagist)
+Add the composer requirements
 ```javascript
 {
     "require-dev": {
-        "playbloom/guzzle-bundle": "dev-master"
+        "playbloom/guzzle-bundle": "v1.0.4"
     },
-
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git://github.com/ludofleury/GuzzleBundle.git"
-        }
-    ]
 }
 ```
 
