@@ -37,7 +37,7 @@ playbloom_guzzle:
 
 ### Guzzle client as a Symfony service
 
-Concrete [Guzzle client creation](http://guzzlephp.org/tour/building_services.html#create-a-client) can be easily managed by the Symfony service container thanks to a [simple factory configuration](http://symfony.com/doc/current/components/dependency_injection/factories.html), in this case, you just need to tag your guzzle service(s) with `playbloom_guzzle.client`.
+Concrete [Guzzle client creation](http://guzzle.readthedocs.org/en/latest/clients.html#creating-a-client) can be easily managed by the Symfony service container thanks to a [simple factory configuration](http://symfony.com/doc/current/components/dependency_injection/factories.html), in this case, you just need to tag your guzzle service(s) with `playbloom_guzzle.client`.
 
 It will add the basic logger to your client(s). If the web_profiler is enabled in the current environement, it will also add the advanced profiler and display report on the Symfony toolbar/web profiler.
 
