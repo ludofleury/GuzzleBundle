@@ -66,6 +66,12 @@
                 <th>Query</th>
                 <td>{{ request.query }}</td>
             </tr>
+            {% if request.method == 'GET' %}
+            <tr>
+                <th>URL</th>
+                <td><a href="{{ request.scheme }}://{{ request.host }}{{ request.path }}?{{ request.query }}">{{ request.scheme }}://{{ request.host }}{{ request.path }}?{{ request.query }}</a></td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
 
