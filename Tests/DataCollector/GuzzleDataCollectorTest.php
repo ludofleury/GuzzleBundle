@@ -70,6 +70,7 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
                     'method'  => 'get',
                     'scheme'  => 'http',
                     'host'    => 'test.local',
+		    'port'    => 80,
                     'path'    => '/',
                     'query'   => $callUrlQuery,
                     'body'    => null
@@ -122,6 +123,7 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
                     'method'  => 'post',
                     'scheme'  => 'http',
                     'host'    => 'test.local',
+		    'port'    => 80,
                     'path'    => '/',
                     'query'   => $callUrlQuery,
                     'body'    => null,
@@ -181,6 +183,7 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
                     'method'  => 'post',
                     'scheme'  => 'http',
                     'host'    => 'test.local',
+		    'port'    => 80,
                     'path'    => '/',
                     'query'   => $callUrlQuery,
                     'body'    => 'Request body string',
@@ -312,6 +315,12 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getHost')
             ->will($this->returnValue($host))
+        ;
+		
+		$request
+            ->expects($this->any())
+            ->method('getPort')
+            ->will($this->returnValue(80))
         ;
 
         $request
