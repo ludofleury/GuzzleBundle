@@ -16,7 +16,7 @@ Add the composer requirements
 ```javascript
 {
     "require-dev": {
-        "playbloom/guzzle-bundle": "v1.0.4"
+        "playbloom/guzzle-bundle": "v1.1.0"
     },
 }
 ```
