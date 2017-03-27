@@ -1,81 +1,70 @@
-{% macro display_array_recursive(array, separator = ', ', opening_char = '[', closing_char = ']') -%}
-{{ opening_char }}
-{%- for key, value in array -%}
-    {%- if value is iterable -%}
-        {{ key }} => {{ _self.display_array_recursive(value, separator, opening_char, closing_char) }}
-    {%- else -%}
-        {{ key }} => {{ value }}
-        {%- if not loop.last %}{{ separator }}{% endif -%}
-    {%- endif -%}
-{%- endfor -%}
-{{ closing_char }}
-{%- endmacro %}
+{% import '@PlaybloomGuzzle/Macro/displayArrayRecursiveMacro.html.twig' as arrayMacros %}
 
 <div id="request_{{ index }}" class="tab-pane active">
     {% if time.total > 0 %}
-      {% set connection_percent = (100 * time.connection) / time.total %}
-      {% set process_percent = (100 * (time.total - time.connection)) / time.total %}
+        {% set connection_percent = (100 * time.connection) / time.total %}
+        {% set process_percent = (100 * (time.total - time.connection)) / time.total %}
 
-      <h5>Time</h5>
-      <table>
-          <tbody>
-              <tr>
-                  <th>Duration total</th>
-                  <td>{{ (time.total * 1000)|number_format(0, '', '') }} <small>ms</small></td>
-              </tr>
-              <tr>
-                  <th>Duration connection</th>
-                  <td>{{ (time.connection * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ connection_percent|number_format(0, '', '') }}%</td>
-              </tr>
-              <tr>
-                  <th>Duration process</th>
-                  <td>{{ ((time.total - time.connection) * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ process_percent|number_format(0, '', '') }}%</td>
-              </tr>
-              <tr>
-                  <td colspan="2">
-                      <div class="progress progress-striped">
-                          <div class="bar bar-warning" style="width: {{ connection_percent|number_format(0) }}%;">wait {{ connection_percent|number_format(0) }} %</div>
-                          <div class="bar bar-success" style="width: {{ process_percent|number_format(0) }}%;">process {{ process_percent|number_format(0) }} %</div>
-                      </div>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
+        <h5>Time</h5>
+        <table>
+            <tbody>
+            <tr>
+                <th>Duration total</th>
+                <td>{{ (time.total * 1000)|number_format(0, '', '') }} <small>ms</small></td>
+            </tr>
+            <tr>
+                <th>Duration connection</th>
+                <td>{{ (time.connection * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ connection_percent|number_format(0, '', '') }}%</td>
+            </tr>
+            <tr>
+                <th>Duration process</th>
+                <td>{{ ((time.total - time.connection) * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ process_percent|number_format(0, '', '') }}%</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="progress progress-striped">
+                        <div class="bar bar-warning" style="width: {{ connection_percent|number_format(0) }}%;">wait {{ connection_percent|number_format(0) }} %</div>
+                        <div class="bar bar-success" style="width: {{ process_percent|number_format(0) }}%;">process {{ process_percent|number_format(0) }} %</div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     {% endif %}
 
     <h5>Information</h5>
     <table>
         <tbody>
-            <tr>
-                <th>Method</th>
-                <td>{{ request.method }}</td>
-            </tr>
-            <tr>
-                <th>Protocol</th>
-                <td>{{ request.scheme }}</td>
-            </tr>
-            <tr>
-                <th>Host</th>
-                <td>{{ request.host }}</td>
-            </tr>
-            <tr>
-                <th>Port</th>
-                <td>{{ request.port }}</td>
-            </tr>
-            <tr>
-                <th>Path</th>
-                <td>{{ request.path }}</td>
-            </tr>
-            <tr>
-                <th>Query</th>
-                <td>{{ request.query }}</td>
-            </tr>
-            {% if request.method == 'GET' %}
+        <tr>
+            <th>Method</th>
+            <td>{{ request.method }}</td>
+        </tr>
+        <tr>
+            <th>Protocol</th>
+            <td>{{ request.scheme }}</td>
+        </tr>
+        <tr>
+            <th>Host</th>
+            <td>{{ request.host }}</td>
+        </tr>
+        <tr>
+            <th>Port</th>
+            <td>{{ request.port }}</td>
+        </tr>
+        <tr>
+            <th>Path</th>
+            <td>{{ request.path }}</td>
+        </tr>
+        <tr>
+            <th>Query</th>
+            <td>{{ request.query }}</td>
+        </tr>
+        {% if request.method == 'GET' %}
             <tr>
                 <th>URL</th>
                 <td><a href="{{ request.scheme }}://{{ request.host }}{{ request.path }}?{{ request.query }}">{{ request.scheme }}://{{ request.host }}{{ request.path }}?{{ request.query }}</a></td>
             </tr>
-            {% endif %}
+        {% endif %}
         </tbody>
     </table>
 
@@ -99,7 +88,7 @@
                 <th>{{ name }}</th>
                 <td>
                     {% if parameter is iterable %}
-                        {{ _self.display_array_recursive(parameter) }}
+                        {{ arrayMacros.display_array_recursive(parameter) }}
                     {% else %}
                         {{ parameter }}
                     {% endif %}
