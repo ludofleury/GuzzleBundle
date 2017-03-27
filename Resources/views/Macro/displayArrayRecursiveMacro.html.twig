@@ -1,0 +1,13 @@
+{% macro display_array_recursive(array, separator = ', ', opening_char = '[', closing_char = ']') -%}
+    {% import _self as macros %}
+    {{ opening_char }}
+    {%- for key, value in array -%}
+        {%- if value is iterable -%}
+            {{ key }} => {{ macros.display_array_recursive(value, separator, opening_char, closing_char) }}
+        {%- else -%}
+            {{ key }} => {{ value }}
+            {%- if not loop.last %}{{ separator }}{% endif -%}
+        {%- endif -%}
+    {%- endfor -%}
+    {{ closing_char }}
+{%- endmacro %}
