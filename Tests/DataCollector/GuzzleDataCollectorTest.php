@@ -10,7 +10,7 @@ use Guzzle\Plugin\History\HistoryPlugin;
  *
  * @author Ludovic Fleury <ludo.fleury@gmail.com>
  */
-class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
+class GuzzleDataCollectorTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetName()
     {
@@ -25,10 +25,12 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
     public function testCollectEmpty()
     {
         // test an empty collector
+        /** @var GuzzleDataCollector $guzzleDataCollector */
         $guzzleDataCollector = $this->createGuzzleCollector();
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')->getMock();
+        /** @var GuzzleDataCollector $guzzleDataCollector */
         $guzzleDataCollector->collect($request, $response);
 
         $this->assertEquals($guzzleDataCollector->getCalls(), array());
@@ -50,13 +52,14 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
         $callRequest = $this->stubRequest('get', 'http', 'test.local', '/', $callUrlQuery);
         $callResponse = $this->stubResponse(200, 'OK', 'Hello world');
         $call = $this->stubCall($callRequest, $callResponse, $callInfos);
+        /** @var GuzzleDataCollector $guzzleDataCollector */
         $guzzleDataCollector = $this->createGuzzleCollector(array($call));
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->disableOriginalConstructor()->getMock();
+        $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')->disableOriginalConstructor()->getMock();
         $guzzleDataCollector->collect($request, $response);
 
-        $this->assertEquals(count($guzzleDataCollector->getCalls()), 1);
+        $this->assertCount( 1, $guzzleDataCollector->getCalls() );
         $this->assertEquals($guzzleDataCollector->countErrors(), 0);
         $this->assertEquals($guzzleDataCollector->getMethods(), array('get' => 1));
         $this->assertEquals($guzzleDataCollector->getTotalTime(), 150);
@@ -103,13 +106,14 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
         $callRequest = $this->stubRequest('post', 'http', 'test.local', '/', $callUrlQuery);
         $callResponse = $this->stubResponse(404, 'Not found', 'Oops');
         $call = $this->stubCall($callRequest, $callResponse, $callInfos);
+        /** @var GuzzleDataCollector $guzzleDataCollector */
         $guzzleDataCollector = $this->createGuzzleCollector(array($call));
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')->getMock();
         $guzzleDataCollector->collect($request, $response);
 
-        $this->assertEquals(count($guzzleDataCollector->getCalls()), 1);
+        $this->assertCount(1, $guzzleDataCollector->getCalls());
         $this->assertEquals($guzzleDataCollector->countErrors(), 1);
         $this->assertEquals($guzzleDataCollector->getMethods(), array('post' => 1));
         $this->assertEquals($guzzleDataCollector->getTotalTime(), 150);
@@ -152,7 +156,7 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCollectBodyRequestCall()
     {
-        $callBody = $this->getMock('Guzzle\Stream\StreamInterface');
+        $callBody = $this->getMockBuilder('Guzzle\Stream\StreamInterface')->getMock();
         $callBody
             ->expects($this->once())
             ->method('__toString')
@@ -165,8 +169,8 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
         $call = $this->stubCall($callRequest, $callResponse, $callInfos);
         $guzzleDataCollector = $this->createGuzzleCollector(array($call));
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')->getMock();
         $guzzleDataCollector->collect($request, $response);
 
         $this->assertEquals(count($guzzleDataCollector->getCalls()), 1);
@@ -267,7 +271,7 @@ class GuzzleDataCollectorTest extends \PHPUnit_Framework_TestCase
      */
     protected function stubQuery(array $query)
     {
-        $query = $this->getMock('Guzzle\Http\QueryString');
+        $query = $this->getMockBuilder('Guzzle\Http\QueryString')->getMock();
         $query
             ->expects($this->any())
             ->method('__toString()')
