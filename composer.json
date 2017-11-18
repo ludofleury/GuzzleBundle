@@ -5,7 +5,7 @@
     "homepage": "https://github.com/ludofleury/GuzzleBundle",
     "type": "symfony-bundle",
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "authors": [
         {
             "name": "Ludovic Fleury",
@@ -13,14 +13,16 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.6",
         "guzzle/guzzle": "3.*",
-        "symfony/web-profiler-bundle": "~2.1",
-        "symfony/http-foundation": "~2.1",
-        "symfony/http-kernel": "~2.1",
-        "symfony/config": "~2.1",
-        "symfony/dependency-injection": "~2.1"
-
+        "symfony/web-profiler-bundle": "~2.1|~3.0|^4.0",
+        "symfony/http-foundation": "~2.1|~3.0|^4.0",
+        "symfony/http-kernel": "~2.1|~3.0|^4.0",
+        "symfony/config": "~2.1|~3.0|^4.0",
+        "symfony/dependency-injection": "~2.1|~3.0|^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.7"
     },
     "autoload": {
         "psr-0": { "Playbloom\\Bundle\\GuzzleBundle": "" }
