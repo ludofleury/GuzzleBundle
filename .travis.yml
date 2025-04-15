@@ -1,15 +1,36 @@
 language: php
 php:
-  - 5.3
-  - 5.4
-  - 5.5
   - 5.6
+  - 7.0
+  - 7.1
   - hhvm
 
-before_script:
-  - wget http://getcomposer.org/composer.phar
-  - php composer.phar --dev install
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.6
+      env: COMPOSER_FLAGS="--prefer-lowest"
+    # test 2.7 LTS
+    - php: 5.6
+      env: SYMFONY_VERSION=2.7.*
+    # test 2.8 LTS
+    - php: 5.6
+      env: SYMFONY_VERSION=2.8.*
+    # test the latest stable 3.x release
+    - php: 5.6
+      env: SYMFONY_VERSION=^3.0
+    # test the latest release (including beta releases)
+    - php: 7.1
+      env: DEPENDENCIES=beta
+  allow_failures:
+    - php: hhvm
+
+before_install:
+  - if [ "$DEPENDENCIES" = "beta" ]; then composer config minimum-stability beta; fi;
+  - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
+
+install: composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
 script:
-  - phpunit -c phpunit.xml.dist --coverage-text --exclude-group functional
-  - phpunit -c phpunit.xml.dist --coverage-text --group functional
+  - ./vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --exclude-group functional
+  - ./vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --group functional
