@@ -1,4 +1,4 @@
-# Guzzle Bundle [![Build Status](https://github.com/ludofleury/GuzzleBundle/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/your-username/GuzzleProfilerBundle/actions/workflows/tests.yml) [![Latest Stable Version](https://poser.pugx.org/playbloom/guzzle-bundle/v/stable.png)](https://packagist.org/packages/playbloom/guzzle-bundle) [![Total Downloads](https://poser.pugx.org/playbloom/guzzle-bundle/downloads.png)](https://packagist.org/packages/playbloom/guzzle-bundle)
+# Guzzle Bundle [![Build Status](https://github.com/ludofleury/GuzzleBundle/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/ludofleury/GuzzleBundle/actions/workflows/tests.yml) [![Latest Stable Version](https://poser.pugx.org/playbloom/guzzle-bundle/v/stable.png)](https://packagist.org/packages/playbloom/guzzle-bundle) [![Total Downloads](https://poser.pugx.org/playbloom/guzzle-bundle/downloads.png)](https://packagist.org/packages/playbloom/guzzle-bundle)
 
 Provide a basic logger and an advanced profiler for Guzzle
 
