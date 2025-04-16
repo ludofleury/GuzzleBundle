@@ -1,10 +1,9 @@
-# Guzzle Bundle [![Build Status](https://travis-ci.org/ludofleury/GuzzleBundle.png?branch=master)](https://travis-ci.org/ludofleury/GuzzleBundle) [![Latest Stable Version](https://poser.pugx.org/playbloom/guzzle-bundle/v/stable.png)](https://packagist.org/packages/playbloom/guzzle-bundle) [![Total Downloads](https://poser.pugx.org/playbloom/guzzle-bundle/downloads.png)](https://packagist.org/packages/playbloom/guzzle-bundle)
+# Guzzle Bundle [![Build Status](https://github.com/ludofleury/GuzzleBundle/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/your-username/GuzzleProfilerBundle/actions/workflows/tests.yml) [![Latest Stable Version](https://poser.pugx.org/playbloom/guzzle-bundle/v/stable.png)](https://packagist.org/packages/playbloom/guzzle-bundle) [![Total Downloads](https://poser.pugx.org/playbloom/guzzle-bundle/downloads.png)](https://packagist.org/packages/playbloom/guzzle-bundle)
 
 Provide a basic logger and an advanced profiler for Guzzle
 
 * The basic logger use the default Symfony app logger, it's safe to use in your production environement.
 * The advanced profiler is for debug purposes and will display a dedicated report available in the toolbar and Symfony Web Profiler
-
 
 <img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-profiler-panel.png" width="280" height="175" alt="Guzzle Symfony web profiler panel"/>
 <img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-request-detail.png" width="280" height="175" alt="Guzzle Symfony web profiler panel - request details"/>
@@ -16,7 +15,7 @@ Add the composer requirements
 ```javascript
 {
     "require-dev": {
-        "playbloom/guzzle-bundle": "v1.1.0"
+        "playbloom/guzzle-bundle": "v1.2.0"
     },
 }
 ```
@@ -122,7 +121,3 @@ This bundle is under the MIT license. See the complete license in the bundle
 ## Credits
 
 * Swagger for the UI
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ludofleury/guzzlebundle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
