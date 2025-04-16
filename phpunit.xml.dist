@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="Tests/bootstrap.php">
+<phpunit colors="true" bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="PlaybloomGuzzleBundle Test Suite">
-            <directory>./Tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 
@@ -11,8 +11,8 @@
             <directory>./</directory>
             <exclude>
                 <directory>./vendor</directory>
-                <directory>./Tests</directory>
-                <directory>./Resources</directory>
+                <directory>./tests</directory>
+                <directory>./src/Resources</directory>
             </exclude>
         </whitelist>
     </filter>

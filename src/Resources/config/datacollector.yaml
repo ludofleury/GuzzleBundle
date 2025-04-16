@@ -1,0 +1,7 @@
+services:
+    data_collector.guzzle:
+        class: Playbloom\Bundle\GuzzleBundle\DataCollector\GuzzleDataCollector
+        arguments:
+            - '@playbloom_guzzle.client.plugin.profiler'
+        tags:
+            - { name: data_collector, template: 'PlaybloomGuzzleBundle:Collector:guzzle', id: guzzle }

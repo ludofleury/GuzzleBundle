@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    name: PHPUnit PHP ${{ matrix.php }} ${{ matrix.dependency }} (Symfony ${{ matrix.symfony }})
+    name: PHPUnit PHP ${{ matrix.php }} (Symfony ${{ matrix.symfony }})
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -17,9 +17,6 @@ jobs:
           - '7.0'
           - '7.1'
           - '7.4'
-        dependency:
-          - ''
-          - 'lowest'
         symfony:
           - '2.1.*'
           - '2.7.*'
@@ -62,15 +59,13 @@ jobs:
           restore-keys: ${{ matrix.php }}-composer-
 
       - name: Update project dependencies
-        if: matrix.dependency == ''
         run: composer update --no-progress --ansi --prefer-stable
-
-      - name: Update project dependencies lowest
-        if: matrix.dependency == 'lowest'
-        run: composer update --no-progress --ansi --prefer-stable --prefer-lowest
 
       - name: Validate composer
         run: composer validate --strict --no-check-lock
 
       - name: Run tests
         run: vendor/bin/phpunit
+
+      - name: Run phpcs
+        run: vendor/bin/phpcs --standard=phpcs.xml.dist src/ tests/

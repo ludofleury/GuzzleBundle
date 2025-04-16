@@ -4,7 +4,6 @@ namespace Playbloom\Bundle\GuzzleBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
 use Playbloom\Bundle\GuzzleBundle\DependencyInjection\Compiler\ClientPluginPass;
 
 /**

@@ -3,7 +3,6 @@
 namespace Playbloom\Bundle\GuzzleBundle\DataCollector;
 
 use Guzzle\Plugin\History\HistoryPlugin;
-
 use Guzzle\Http\Message\RequestInterface as GuzzleRequestInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -118,7 +117,7 @@ class GuzzleDataCollector extends DataCollector
     /**
      * Collect & sanitize data about a Guzzle request
      *
-     * @param Guzzle\Http\Message\RequestInterface $request
+     * @param GuzzleRequestInterface $request
      *
      * @return array
      */
@@ -134,7 +133,7 @@ class GuzzleDataCollector extends DataCollector
             'method'  => $request->getMethod(),
             'scheme'  => $request->getScheme(),
             'host'    => $request->getHost(),
-	    'port'    => $request->getPort(),
+            'port'    => $request->getPort(),
             'path'    => $request->getPath(),
             'query'   => $request->getQuery(),
             'body'    => $body
@@ -144,7 +143,7 @@ class GuzzleDataCollector extends DataCollector
     /**
      * Collect & sanitize data about a Guzzle response
      *
-     * @param Guzzle\Http\Message\RequestInterface $request
+     * @param GuzzleRequestInterface $request
      *
      * @return array
      */
@@ -164,7 +163,7 @@ class GuzzleDataCollector extends DataCollector
     /**
      * Collect time for a Guzzle request
      *
-     * @param Guzzle\Http\Message\RequestInterface $request
+     * @param GuzzleRequestInterface $request
      *
      * @return array
      */
@@ -176,5 +175,13 @@ class GuzzleDataCollector extends DataCollector
             'total'      => $response->getInfo('total_time'),
             'connection' => $response->getInfo('connect_time')
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function reset()
+    {
+        $this->data = [];
     }
 }

@@ -11,8 +11,14 @@ Provide a basic logger and an advanced profiler for Guzzle
 
 ## Installation
 
+```sh
+composer require --dev playbloom/guzzle-bundle
+```
+
+or
+
 Add the composer requirements
-```javascript
+```json
 {
     "require-dev": {
         "playbloom/guzzle-bundle": "v1.2.0"
@@ -21,6 +27,7 @@ Add the composer requirements
 ```
 
 Add the bundle to your Symfony app kernel
+
 ```php
 <?php
     // in %your_project%/app/AppKernel.php
@@ -29,6 +36,7 @@ Add the bundle to your Symfony app kernel
 ```
 
 To enable the advanced profiler & the toolbar/web profiler panel, add this line to your `app/config/config_dev.yml`
+
 ```yml
 playbloom_guzzle:
     web_profiler: true
@@ -40,14 +48,13 @@ Concrete [Guzzle client creation](http://guzzle.readthedocs.org/en/latest/client
 
 It will add the basic logger to your client(s). If the web_profiler is enabled in the current environement, it will also add the advanced profiler and display report on the Symfony toolbar/web profiler.
 
-```xml
-<service id="acme.client"
-    class="%acme.client.class%"
-    factory-class="%acme.client.class%"
-    factory-method="factory">
-    <!-- your arguments -->
-    <tag name="playbloom_guzzle.client" />
-</service>
+```yaml
+# config/services.yaml
+services:
+    acme.client:
+        class: '%acme.client.class%'
+        factory: ['%acme.client.class%', 'factory']
+        tags: ['playbloom_guzzle.client']
 ```
 
 ### Add the logger/profiler manually to a Guzzle client
@@ -66,8 +73,6 @@ $client->addSubscriber($loggerPlugin);
 // advanced profiler for developement and debug, requires web_profiler to be enabled
 $profilerPlugin = $container->get('playbloom_guzzle.client.plugin.profiler');
 $client->addSubscriber($profilerPlugin);
-
-?>
 ```
 
 ## Customize your own profiler panel
@@ -81,6 +86,7 @@ First, define your own `GithubDataCollector` extending the `Playbloom\Bundle\Guz
 
 
 Then extends the guzzle web profiler template
+
 ```twig
 {% extends 'PlaybloomGuzzleBundle:Collector:guzzle.html.twig' %}
 
@@ -98,13 +104,16 @@ Then extends the guzzle web profiler template
 ```
 
 And finally declare your data collector
-```xml
-<service id="data_collector.github" class="Acme\GithubBundle\DataCollector\GithubDataCollector">
-    <argument type="service" id="playbloom_guzzle.client.plugin.profiler"/>
-    <tag name="data_collector"
-        template="AcmeGithubBundle:Collector:github"
-        id="github"/>
-</service>
+
+```yaml
+# config/services.yaml
+services:
+    data_collector.github:
+        class: Acme\GithubBundle\DataCollector\GithubDataCollector
+        arguments:
+            - '@playbloom_guzzle.client.plugin.profiler'
+        tags:
+            - { name: data_collector, template: '@AcmeGithub/Collector/github.html.twig', id: github }
 ```
 
 That's it, now your profiler panel displays your custom information and the Guzzle API requests.
