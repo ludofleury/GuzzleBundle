@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset name="PHP_CodeSniffer">
+  <rule ref="PSR12" />
+
+  <exclude-pattern>./vendor/*</exclude-pattern>
+  <exclude-pattern>./src/Resources/*</exclude-pattern>
+</ruleset>
