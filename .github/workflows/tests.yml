@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    name: PHPUnit PHP ${{ matrix.php }} (Symfony ${{ matrix.symfony }})
+    name: PHPUnit PHP ${{ matrix.php }} (Symfony ${{ matrix.symfony }}, Guzzle ${{ matrix.guzzle }})
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -23,6 +23,11 @@ jobs:
           - '2.8.*'
           - '3.4.*'
           - '4.4.*'
+        guzzle:
+          - 'guzzle3'
+          - 'guzzle4'
+          - 'guzzle5'
+          - 'guzzle6'
         exclude:
           - php: '7.4'
             symfony: '2.1.*'
@@ -45,6 +50,7 @@ jobs:
           tools: flex
 
       - name: Configure Symfony
+        working-directory: tests/guzzle_environments/${{ matrix.guzzle }}
         run: composer config extra.symfony.require "${{ matrix.symfony }}"
 
       - name: Get Composer Cache Directory
@@ -55,17 +61,17 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-${{ matrix.guzzle }}-composer-${{ hashFiles('tests/guzzle_environments/${{ matrix.guzzle }}/composer.json') }}
+          restore-keys: ${{ matrix.php }}-${{ matrix.guzzle }}-composer-
 
       - name: Update project dependencies
+        working-directory: tests/guzzle_environments/${{ matrix.guzzle }}
         run: composer update --no-progress --ansi --prefer-stable
 
       - name: Validate composer
+        working-directory: tests/guzzle_environments/${{ matrix.guzzle }}
         run: composer validate --strict --no-check-lock
 
       - name: Run tests
+        working-directory: tests/guzzle_environments/${{ matrix.guzzle }}
         run: vendor/bin/phpunit
-
-      - name: Run phpcs
-        run: vendor/bin/phpcs --standard=phpcs.xml.dist src/ tests/

@@ -1,23 +1,20 @@
 services:
     playbloom_guzzle.client.plugin.logger:
-        class: Guzzle\Plugin\Log\LogPlugin
+        class: Playbloom\Bundle\GuzzleBundle\Log\LoggerPlugin
         public: true
-        arguments:
-            - '@playbloom_guzzle.client.plugin.logger_adapter'
-            - 'Requested "{host}" {method} "{resource}"'
-        tags:
-            - { name: playbloom_guzzle.client.plugin }
-
-    playbloom_guzzle.client.plugin.logger_adapter:
-        class: Guzzle\Log\MonologLogAdapter
-        public: false
+        factory: ['Playbloom\Bundle\GuzzleBundle\Log\GuzzleLoggerFactory', 'create']
         arguments:
             - '@logger'
+            - 'Requested "{host}" {method} "{resource}"'
         tags:
             - { name: monolog.logger, channel: guzzle }
+            - { name: playbloom_guzzle.client.plugin }
 
     playbloom_guzzle.client.plugin.profiler:
-        class: Guzzle\Plugin\History\HistoryPlugin
+        class: Playbloom\Bundle\GuzzleBundle\DataCollector\HistoryPlugin
         public: true
+        factory: ['Playbloom\Bundle\GuzzleBundle\DataCollector\GuzzleHistoryFactory', 'create']
+        arguments:
+            - '@?debug.stopwatch'
         calls:
             - [setLimit, [100]]

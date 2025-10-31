@@ -13,7 +13,9 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 class PlaybloomGuzzleExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * @param array $configs Configuration array
+     * @param ContainerBuilder $container Container builder
+     * @return void
      */
     public function load(array $configs, ContainerBuilder $container)
     {

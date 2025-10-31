@@ -2,12 +2,9 @@
 
 namespace Playbloom\Bundle\GuzzleBundle\DataCollector;
 
-use Guzzle\Plugin\History\HistoryPlugin;
-use Guzzle\Http\Message\RequestInterface as GuzzleRequestInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 
 /**
  * GuzzleDataCollector.
@@ -18,13 +15,19 @@ class GuzzleDataCollector extends DataCollector
 {
     private $profiler;
 
-    public function __construct(HistoryPlugin $profiler)
+    /**
+     * @param \Traversable|\IteratorAggregate $profiler History plugin/subscriber/middleware
+     */
+    public function __construct($profiler)
     {
         $this->profiler = $profiler;
     }
 
     /**
-     * {@inheritdoc}
+     * @param Request $request HTTP request
+     * @param Response $response HTTP response
+     * @param \Exception|null $exception Exception if any
+     * @return void
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
@@ -55,11 +58,11 @@ class GuzzleDataCollector extends DataCollector
             $data['error_count'] += (int) $error;
         };
 
-        foreach ($this->profiler as $call) {
-            $request = $this->collectRequest($call);
-            $response = $this->collectResponse($call);
-            $time = $this->collectTime($call);
-            $error = $call->getResponse()->isError();
+        foreach ($this->profiler as $transaction) {
+            $request = $this->collectRequest($transaction);
+            $response = $this->collectResponse($transaction);
+            $time = $this->collectTime($transaction);
+            $error = $this->isError($transaction);
 
             $aggregate($request, $response, $time, $error);
 
@@ -107,7 +110,7 @@ class GuzzleDataCollector extends DataCollector
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getName()
     {
@@ -115,70 +118,200 @@ class GuzzleDataCollector extends DataCollector
     }
 
     /**
-     * Collect & sanitize data about a Guzzle request
-     *
-     * @param GuzzleRequestInterface $request
-     *
+     * @param mixed $transaction Transaction data
      * @return array
+     * @throws \InvalidArgumentException When request type is unsupported
      */
-    private function collectRequest(GuzzleRequestInterface $request)
+    private function collectRequest($transaction)
     {
-        $body = null;
-        if ($request instanceof EntityEnclosingRequestInterface) {
-            $body = (string) $request->getBody();
+        $request = $this->getRequest($transaction);
+
+        if (interface_exists('Guzzle\Http\Message\RequestInterface') &&
+            $request instanceof \Guzzle\Http\Message\RequestInterface) {
+            $body = null;
+            if ($request instanceof \Guzzle\Http\Message\EntityEnclosingRequestInterface) {
+                $body = (string) $request->getBody();
+            }
+
+            return [
+                'headers' => $request->getHeaders(),
+                'method'  => $request->getMethod(),
+                'scheme'  => $request->getScheme(),
+                'host'    => $request->getHost(),
+                'port'    => $request->getPort(),
+                'path'    => $request->getPath(),
+                'query'   => $request->getQuery(),
+                'body'    => $body
+            ];
         }
 
-        return array(
-            'headers' => $request->getHeaders(),
-            'method'  => $request->getMethod(),
-            'scheme'  => $request->getScheme(),
-            'host'    => $request->getHost(),
-            'port'    => $request->getPort(),
-            'path'    => $request->getPath(),
-            'query'   => $request->getQuery(),
-            'body'    => $body
-        );
+        if (interface_exists('Psr\Http\Message\RequestInterface') &&
+            $request instanceof \Psr\Http\Message\RequestInterface) {
+            $uri = $request->getUri();
+            $queryString = $uri->getQuery();
+            $queryArray = [];
+            if ($queryString) {
+                parse_str($queryString, $queryArray);
+            }
+            return [
+                'headers' => $request->getHeaders(),
+                'method'  => $request->getMethod(),
+                'scheme'  => $uri->getScheme(),
+                'host'    => $uri->getHost(),
+                'port'    => $uri->getPort(),
+                'path'    => $uri->getPath(),
+                'query'   => $queryArray ?: $queryString,
+                'body'    => (string) $request->getBody()
+            ];
+        }
+
+        if (interface_exists('GuzzleHttp\Message\RequestInterface') &&
+            $request instanceof \GuzzleHttp\Message\RequestInterface) {
+            $uri = parse_url($request->getUrl());
+            return [
+                'headers' => $request->getHeaders(),
+                'method'  => $request->getMethod(),
+                'scheme'  => $uri['scheme'] ?? 'http',
+                'host'    => $uri['host'] ?? '',
+                'port'    => $uri['port'] ?? null,
+                'path'    => $uri['path'] ?? '/',
+                'query'   => $uri['query'] ?? '',
+                'body'    => method_exists($request, 'getBody') ? (string) $request->getBody() : null
+            ];
+        }
+
+        throw new \InvalidArgumentException('Unsupported request type');
     }
 
     /**
-     * Collect & sanitize data about a Guzzle response
-     *
-     * @param GuzzleRequestInterface $request
-     *
+     * @param mixed $transaction Transaction data
      * @return array
      */
-    private function collectResponse(GuzzleRequestInterface $request)
+    private function collectResponse($transaction)
     {
-        $response = $request->getResponse();
-        $body = $response->getBody(true);
+        $response = $this->getResponse($transaction);
+        if (!$response) {
+            return [
+                'statusCode'   => 0,
+                'reasonPhrase' => 'No response',
+                'headers'      => [],
+                'body'         => ''
+            ];
+        }
 
-        return array(
+        if (interface_exists('Guzzle\Http\Message\Response') &&
+            $response instanceof \Guzzle\Http\Message\Response) {
+            return [
+                'statusCode'   => $response->getStatusCode(),
+                'reasonPhrase' => $response->getReasonPhrase(),
+                'headers'      => $response->getHeaders(),
+                'body'         => $response->getBody(true)
+            ];
+        }
+
+        return [
             'statusCode'   => $response->getStatusCode(),
             'reasonPhrase' => $response->getReasonPhrase(),
             'headers'      => $response->getHeaders(),
-            'body'         => $body
-        );
+            'body'         => (string) $response->getBody()
+        ];
     }
 
     /**
-     * Collect time for a Guzzle request
-     *
-     * @param GuzzleRequestInterface $request
-     *
+     * @param mixed $transaction Transaction data
      * @return array
      */
-    private function collectTime(GuzzleRequestInterface $request)
+    private function collectTime($transaction)
     {
-        $response = $request->getResponse();
+        $totalTime = 0;
+        $connectTime = 0;
 
-        return array(
-            'total'      => $response->getInfo('total_time'),
-            'connection' => $response->getInfo('connect_time')
-        );
+        if (is_array($transaction) && isset($transaction['transfer_stats'])) {
+            $stats = $transaction['transfer_stats'];
+            if ($stats instanceof \GuzzleHttp\TransferStats) {
+                $totalTime = $stats->getTransferTime();
+                $handlerStats = $stats->getHandlerStats();
+                
+                if (isset($handlerStats['connect_time'])) {
+                    $connectTime = $handlerStats['connect_time'];
+                } elseif (isset($handlerStats['pretransfer_time'])) {
+                    $connectTime = $handlerStats['pretransfer_time'];
+                } elseif (isset($handlerStats['namelookup_time'])) {
+                    $connectTime = $handlerStats['namelookup_time'];
+                }
+            }
+        } else {
+            $response = $this->getResponse($transaction);
+            if ($response && method_exists($response, 'getInfo')) {
+                $totalTime = $response->getInfo('total_time');
+                $connectTime = $response->getInfo('connect_time');
+            }
+        }
+
+        return [
+            'total'      => $totalTime ?: 0,
+            'connection' => $connectTime ?: 0
+        ];
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $transaction Transaction data
+     * @return bool
+     */
+    private function isError($transaction)
+    {
+        $response = $this->getResponse($transaction);
+        if (!$response) {
+            return true;
+        }
+
+        if (method_exists($response, 'isError')) {
+            return $response->isError();
+        }
+
+        return $response->getStatusCode() >= 400;
+    }
+
+    /**
+     * @param mixed $transaction Transaction data
+     * @return mixed
+     */
+    private function getRequest($transaction)
+    {
+        if (is_array($transaction) && isset($transaction['request'])) {
+            return $transaction['request'];
+        }
+
+        if (is_object($transaction) && method_exists($transaction, 'getRequest')) {
+            return $transaction->getRequest();
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * @param mixed $transaction Transaction data
+     * @return mixed|null
+     */
+    private function getResponse($transaction)
+    {
+        if (is_array($transaction) && isset($transaction['response'])) {
+            return $transaction['response'];
+        }
+
+        if (is_object($transaction) && method_exists($transaction, 'getResponse')) {
+            return $transaction->getResponse();
+        }
+
+        if (isset($transaction['error'])) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return void
      */
     public function reset()
     {

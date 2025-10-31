@@ -4,8 +4,11 @@ composer.phar
 
 # Test
 .atoum.php
-phpunit.xml
 behat.yml
+
+# Guzzle test environments
+/tests/guzzle_environments/*/vendor/
+/tests/guzzle_environments/*/composer.lock
 
 # Continuous integration
 /build/
