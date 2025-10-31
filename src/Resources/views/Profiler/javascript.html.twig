@@ -1,4 +1,61 @@
 <script src="{{ asset('bundles/playbloomguzzle/vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('bundles/playbloomguzzle/vendor/bootstrap/js/bootstrap-tab.min.js') }}"></script>
-<script src="{{ asset('bundles/playbloomguzzle/vendor/google-code-prettify/prettify.js') }}"></script>
-<script>!function() { $('div.summary').click(function() { $(this).next('div.details').slideToggle(100);});window.prettyPrint && prettyPrint()}()</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+<script>
+(function() {
+    function prettifyJSON(str) {
+        try {
+            var obj = JSON.parse(str);
+            return JSON.stringify(obj, null, 2);
+        } catch (e) {
+            return str;
+        }
+    }
+    
+    $('.guzzle .tab-navigation li').click(function() {
+        var method = $(this).data('method');
+        
+        $('.guzzle .tab-navigation li').removeClass('active');
+        $(this).addClass('active');
+        
+        if (method === 'all') {
+            $('.guzzle .request').show();
+        } else {
+            $('.guzzle .request').hide();
+            $('.guzzle .request.' + method).show();
+        }
+    });
+    
+    $('.guzzle div.summary').click(function() {
+        var $details = $(this).next('div.details');
+        
+        if ($details.is(':visible')) {
+            $details.slideUp(250);
+        } else {
+            $details.slideDown(250, function() {
+                $details.find('pre code').each(function() {
+                    Prism.highlightElement(this);
+                });
+            });
+        }
+    });
+    
+    if (typeof Prism !== 'undefined') {
+        $('.guzzle pre code').each(function() {
+            var $this = $(this);
+            
+            if ($this.hasClass('language-json')) {
+                var originalBody = $this.attr('data-body') || $this.text();
+                var prettified = prettifyJSON(originalBody);
+                $this.text(prettified);
+            }
+        });
+        
+        Prism.highlightAll();
+    }
+})();
+</script>
