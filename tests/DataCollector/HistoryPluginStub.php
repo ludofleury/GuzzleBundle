@@ -2,12 +2,10 @@
 
 namespace Playbloom\Bundle\GuzzleBundle\Tests\DataCollector;
 
-use Guzzle\Plugin\History\HistoryPlugin;
-
 /**
- * Fake History plugin
+ * Fake History plugin for testing - compatible with modern Guzzle versions
  */
-class HistoryPluginStub extends HistoryPlugin implements \IteratorAggregate
+class HistoryPluginStub implements \IteratorAggregate, \Countable
 {
     private $stubJournal = array();
 
@@ -21,8 +19,36 @@ class HistoryPluginStub extends HistoryPlugin implements \IteratorAggregate
      *
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->stubJournal);
+    }
+
+    /**
+     * Count the number of transactions
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->stubJournal);
+    }
+
+    /**
+     * Add a transaction to the history
+     *
+     * @param array $transaction
+     */
+    public function addTransaction(array $transaction)
+    {
+        $this->stubJournal[] = $transaction;
+    }
+
+    /**
+     * Clear the history
+     */
+    public function clear()
+    {
+        $this->stubJournal = array();
     }
 }
