@@ -25,22 +25,18 @@
               </tr>
               <tr>
                   <th>Duration connection</th>
-                  <td>{{ (time.connection * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ connection_percent|number_format(0, '', '') }}%</td>
+                  <td>{{ (time.connection * 1000)|number_format(0, '', '') }} <small>ms</small> ({{ connection_percent|number_format(0, '', '') }}%)</td>
               </tr>
               <tr>
                   <th>Duration process</th>
-                  <td>{{ ((time.total - time.connection) * 1000)|number_format(0, '', '') }} <small>ms</small> - {{ process_percent|number_format(0, '', '') }}%</td>
-              </tr>
-              <tr>
-                  <td colspan="2">
-                      <div class="progress progress-striped">
-                          <div class="bar bar-warning" style="width: {{ connection_percent|number_format(0) }}%;">wait {{ connection_percent|number_format(0) }} %</div>
-                          <div class="bar bar-success" style="width: {{ process_percent|number_format(0) }}%;">process {{ process_percent|number_format(0) }} %</div>
-                      </div>
-                  </td>
+                  <td>{{ ((time.total - time.connection) * 1000)|number_format(0, '', '') }} <small>ms</small> ({{ process_percent|number_format(0, '', '') }}%)</td>
               </tr>
           </tbody>
       </table>
+      <div class="progress progress-striped">
+          <div class="bar bar-warning" style="width: {{ connection_percent|number_format(0) }}%;">{% if connection_percent > 10 %}{{ connection_percent|number_format(0) }}%{% endif %}</div>
+          <div class="bar bar-success" style="width: {{ process_percent|number_format(0) }}%;">{% if process_percent > 10 %}{{ process_percent|number_format(0) }}%{% endif %}</div>
+      </div>
     {% endif %}
 
     <h5>Information</h5>
@@ -68,12 +64,21 @@
             </tr>
             <tr>
                 <th>Query</th>
-                <td>{{ request.query }}</td>
+                <td>
+                    {% if request.query is iterable %}
+                        {{ request.query|url_encode }}
+                    {% else %}
+                        {{ request.query }}
+                    {% endif %}
+                </td>
             </tr>
             {% if request.method == 'GET' %}
             <tr>
                 <th>URL</th>
-                <td><a href="{{ request.scheme }}://{{ request.host }}{{ request.path }}?{{ request.query }}">{{ request.scheme }}://{{ request.host }}{{ request.path }}?{{ request.query }}</a></td>
+                <td>
+                    {% set queryStr = request.query is iterable ? request.query|url_encode : request.query %}
+                    <a href="{{ request.scheme }}://{{ request.host }}{{ request.path }}{% if queryStr %}?{{ queryStr }}{% endif %}" target="_blank">{{ request.scheme }}://{{ request.host }}{{ request.path }}{% if queryStr %}?{{ queryStr }}{% endif %}</a>
+                </td>
             </tr>
             {% endif %}
         </tbody>
@@ -85,12 +90,13 @@
         {% for header,value in request.headers %}
             <tr>
                 <th>{{ header }}</th>
-                <td>{{ value|join('<strong>, </strong>') }}</td>
+                <td>{{ value|join(', ')|raw }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
+    {% if request.query is iterable and request.query is not empty %}
     <h5>Query Parameters</h5>
     <table>
         <tbody>
@@ -108,9 +114,10 @@
         {% endfor %}
         </tbody>
     </table>
+    {% endif %}
 
     {% if request.body is not empty %}
         <h5>Content</h5>
-        <pre class="prettyprint linenums"><code class="language-javascript  ">{{ request.body|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
+        <pre><code class="language-json" data-body="{{ request.body|e('html_attr') }}">{{ request.body }}</code></pre>
     {% endif %}
 </div>
