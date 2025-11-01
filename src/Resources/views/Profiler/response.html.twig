@@ -4,7 +4,7 @@
         <tbody>
             <tr>
                 <th>Code</th>
-                <td>{{ response.statusCode }}</td>
+                <td><strong>{{ response.statusCode }}</strong></td>
             </tr>
             <tr>
                 <th>Status</th>
@@ -19,14 +19,16 @@
         {% for header,value in response.headers %}
             <tr>
                 <th>{{ header }}</th>
-                <td>
-                    {{ value|join(', ') }}
-                </td>
+                <td>{{ value|join(', ') }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
     <h5>Content</h5>
-    <pre class="prettyprint linenums"><code class="language-javascript  ">{{ response.body|replace({"\t\t\n": "", "\t": "  "}) }}</code></pre>
+    {% if response.body is not empty %}
+        <pre><code class="language-json" data-body="{{ response.body|e('html_attr') }}">{{ response.body }}</code></pre>
+    {% else %}
+        <p style="color: #999; font-style: italic;">Empty response body</p>
+    {% endif %}
 </div>
