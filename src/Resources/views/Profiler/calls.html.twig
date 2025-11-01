@@ -1,5 +1,13 @@
 <div class="guzzle">
-    <h2>Requests</h2>
+    <ul class="tab-navigation">
+        <li data-method="all" class="active">All</li>
+        <li data-method="get">GET</li>
+        <li data-method="post">POST</li>
+        <li data-method="put">PUT</li>
+        <li data-method="patch">PATCH</li>
+        <li data-method="delete">DELETE</li>
+    </ul>
+    
     {% for index,call in calls %}
         {% include 'PlaybloomGuzzleBundle:Profiler:call.html.twig' with { 'call': call } %}
     {% endfor %}
