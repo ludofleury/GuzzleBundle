@@ -13,6 +13,10 @@ use Playbloom\Bundle\GuzzleBundle\DependencyInjection\Compiler\ClientPluginPass;
  */
 class PlaybloomGuzzleBundle extends Bundle
 {
+    /**
+     * @param ContainerBuilder $container Container builder
+     * @return void
+     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

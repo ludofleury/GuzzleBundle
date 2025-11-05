@@ -1,29 +1,30 @@
 # Guzzle Bundle [![Build Status](https://github.com/ludofleury/GuzzleBundle/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/ludofleury/GuzzleBundle/actions/workflows/tests.yml) [![Latest Stable Version](https://poser.pugx.org/playbloom/guzzle-bundle/v/stable.png)](https://packagist.org/packages/playbloom/guzzle-bundle) [![Total Downloads](https://poser.pugx.org/playbloom/guzzle-bundle/downloads.png)](https://packagist.org/packages/playbloom/guzzle-bundle)
 
-Provide a basic logger and an advanced profiler for Guzzle
+Provide a basic logger and an advanced profiler for Guzzle with support for multiple Guzzle versions.
 
-* The basic logger use the default Symfony app logger, it's safe to use in your production environement.
+* The basic logger uses the default Symfony app logger, it's safe to use in your production environment.
 * The advanced profiler is for debug purposes and will display a dedicated report available in the toolbar and Symfony Web Profiler
+* **Multi-version support**: Automatically detects and works with Guzzle 4.x, 5.x, 6.x, and 7.x
 
 <img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-profiler-panel.png" width="280" height="175" alt="Guzzle Symfony web profiler panel"/>
 <img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-request-detail.png" width="280" height="175" alt="Guzzle Symfony web profiler panel - request details"/>
 <img src="http://ludofleury.github.io/GuzzleBundle/images/guzzle-response-detail.png" width="280" height="175" alt="Guzzle Symfony web profiler panel - response details"/>
 
+## Supported Guzzle Versions
+
+This bundle supports the following Guzzle versions:
+
+* **Guzzle 4.x** (`guzzlehttp/guzzle:~4.0`)
+* **Guzzle 5.x** (`guzzlehttp/guzzle:~5.0`)
+* **Guzzle 6.x** (`guzzlehttp/guzzle:~6.0`)
+* **Guzzle 7.x** (`guzzlehttp/guzzle:~7.0`)
+
+The bundle automatically detects which version you have installed and adapts accordingly.
+
 ## Installation
 
 ```sh
 composer require --dev playbloom/guzzle-bundle
-```
-
-or
-
-Add the composer requirements
-```json
-{
-    "require-dev": {
-        "playbloom/guzzle-bundle": "v1.2.0"
-    },
-}
 ```
 
 Add the bundle to your Symfony app kernel
@@ -46,7 +47,7 @@ playbloom_guzzle:
 
 Concrete [Guzzle client creation](http://guzzle.readthedocs.org/en/latest/clients.html#creating-a-client) can be easily managed by the Symfony service container thanks to a [simple factory configuration](http://symfony.com/doc/current/components/dependency_injection/factories.html), in this case, you just need to tag your guzzle service(s) with `playbloom_guzzle.client`.
 
-It will add the basic logger to your client(s). If the web_profiler is enabled in the current environement, it will also add the advanced profiler and display report on the Symfony toolbar/web profiler.
+**Automatic plugin attachment** via service tags works for all Guzzle versions (4, 5, 6, and 7). It will add the basic logger to your client(s). If the web_profiler is enabled in the current environment, it will also add the advanced profiler and display report on the Symfony toolbar/web profiler.
 
 ```yaml
 # config/services.yaml
@@ -59,20 +60,40 @@ services:
 
 ### Add the logger/profiler manually to a Guzzle client
 
-If you need to handle the registration of the logger or profiler plugin manually, you can retrieve theses services from the Symfony container.
+If you need to handle the registration of the logger or profiler manually, you can retrieve these services from the Symfony container. The bundle automatically registers the correct service based on your Guzzle version.
+
+#### For Guzzle 4 and 5
 
 ```php
-<?php
+use GuzzleHttp\Client;
 
-$client = new \Guzzle\Http\Client('https://my.api.com');
+$client = new Client(['base_url' => 'https://api.example.com']);
 
-// basic logger service plugged & configured with the default Symfony app logger
-$loggerPlugin = $container->get('playbloom_guzzle.client.plugin.logger');
-$client->addSubscriber($loggerPlugin);
+$logger = $container->get('playbloom_guzzle.client.plugin.subscriber.logger');
+$client->getEmitter()->attach($logger);
 
-// advanced profiler for developement and debug, requires web_profiler to be enabled
-$profilerPlugin = $container->get('playbloom_guzzle.client.plugin.profiler');
-$client->addSubscriber($profilerPlugin);
+$profiler = $container->get('playbloom_guzzle.client.plugin.subscriber.profiler');
+$client->getEmitter()->attach($profiler);
+```
+
+#### For Guzzle 6+
+
+```php
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+
+$stack = HandlerStack::create();
+
+$logger = $container->get('playbloom_guzzle.client.plugin.middleware.logger');
+$stack->push($logger);
+
+$profiler = $container->get('playbloom_guzzle.client.plugin.middleware.profiler');
+$stack->push($profiler);
+
+$client = new Client([
+    'base_uri' => 'https://api.example.com',
+    'handler' => $stack
+]);
 ```
 
 ## Customize your own profiler panel
